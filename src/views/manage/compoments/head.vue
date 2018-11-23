@@ -40,8 +40,8 @@ export default {
       color #fff
       overflow hidden
       li 
-        padding 0 10px 
         font-weight 600
+        width 20%
         float left
         text-shadow 1px 1px 1px #aaa
 </style>

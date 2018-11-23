@@ -2,22 +2,17 @@
   <div class="detail">
     <topHead></topHead>
     <bgBox class="bgBox">
-      <ctitle>第一次回家</ctitle>
+      <ctitle>{{article.article_title}}</ctitle>
       <p class="info">
         <span>2018-11-9</span>
-        <span>4条评论</span>
-        <span>100次阅读</span>
-        <span>3人点赞</span>
+        <span>{{article.article_comment}}条评论</span>
+        <span>{{article.article_click}}次阅读</span>
+        <span>{{article.article_like}}人点赞</span>
       </p>
-      <div class="article">
-        asfdf
-        asdf
-        adsf
-        asdf
-      </div>
+      <div class="article" v-html="article.article_content"></div>
       <div class="like">
-        <vue-star animate="animated rubberBand" color="#F05654">
-          <a slot="icon" class="" @click="great">赞一下！<span>(30)</span></a>
+        <vue-star animate="animated tada" color="#F05654">
+          <a slot="icon" class="fa fa-thumbs-up" @click="great"> 赞 !<span>({{article.article_like}})</span></a>
         </vue-star>
       </div>
     </bgBox>
@@ -34,6 +29,7 @@ export default {
   components:{topHead,bgBox,ctitle,VueStar},
   data(){
     return{
+      article:''
     }
   },
   mounted(){
@@ -44,9 +40,18 @@ export default {
       mobile: true,
       distance: '50px',
     });
+    this.$http.get('/api/detail',{
+        params: {id: this.$route.query.id}
+    }).then(response=>{
+      let res = response.data;
+      console.log(res)
+      this.article = res.data;
+    })
   },
   methods:{
-    great(){}
+    great(){
+
+    }
   }
 }
 </script>

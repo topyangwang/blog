@@ -33,5 +33,12 @@ a
   color inherit  
 ul 
   list-style none 
-
+.bgImg
+  min-height 100vh
+  background #075498 url('./assets/images/top.jpg') no-repeat center top;
+  background-size cover
+.blueBtn
+  background-color #3976AD
+  border 1px solid #075498
+  color #fff
 </style>

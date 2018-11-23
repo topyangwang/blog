@@ -6,7 +6,7 @@
         <div class="content">
           <img class="avatar" src="../assets/images/cover_bg_3.jpg" alt="avatar">
           <p class="name"> <span class="text">Yang hao wen</span> </p>
-          <p class="role" @click="addtop()"> <span class="text">baby</span> </p>
+          <p class="role"> <span class="text">baby</span> </p>
           <ul class="nav">
             <router-link to="/"><li>
                 <i>aaa</i>
@@ -28,6 +28,10 @@
                 <i>aaa</i>
                 <p>关于</p>
             </li></router-link>
+            <router-link to='/login'><li>
+                <i>aaa</i>
+                <p>管理</p>
+            </li></router-link>
           </ul>
         </div>
       </div>
@@ -36,18 +40,18 @@
       <bgBox class="bgBox">
           <p class="floor">成长大事迹</p>
           <ul class="timeLine">
-            <li v-for="(i,index) in [1,2,3,4,4,4,4,4,4,4,4]" :key='index'>
+            <li v-for="(event,index) in events" :key='index'>
               <router-link to="/detail">
                 <div class="time">
-                  <p class="p1">2018</p>
-                  <p class="p2">11月8日</p>
+                  <p class="p1">{{event.event_time | formatDate('yyyy')}}</p>
+                  <p class="p2">{{event.event_time | formatDate('MM月dd日')}}</p>
                 </div>
                 <div class="card reveal-right">
-                  <p class="title">第一次回老家</p>
+                  <p class="title">{{event.event_title}}</p>
                   <div class="detail">
                     <div class="thumb"><img src="../assets/images/p03.jpg" alt=""></div>
                     <div class="text">
-                      <p>asdfdsfds adsfas adsfdsfds</p>
+                      <p>{{event.event_content}}</p>
                     </div>
                   </div>
                 </div>
@@ -72,7 +76,8 @@ export default {
   props:['top'],
   data(){
     return{
-      herderH: 400 //首页头部高度
+      herderH: 400, //首页头部高度
+      events:[]
     }
   },
   mounted(){
@@ -84,6 +89,13 @@ export default {
       mobile: true,
       distance: '50px',
     });
+    
+    this.$http.get('/api/events')
+      .then(response=>{
+        let res = response.data;
+        this.events = res.data;
+        console.log(this.events)
+      })
   },
   methods:{
   }
@@ -152,7 +164,7 @@ export default {
           padding 0
           li 
             display inline-block
-            margin 0 2%
+            margin 0 4px
   .timeStream
     padding-bottom 20px
     padding-top 1px

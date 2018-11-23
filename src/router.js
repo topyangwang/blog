@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue/dist/vue.js'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
 
@@ -38,6 +38,26 @@ export default new Router({
       path: '/photos',
       name: 'photos',
       component: () => import('./views/Photos.vue')
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('./views/Login.vue')
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: () => import('./views/manage/home.vue')
+    },
+    {
+      path: '/admin/addLife',
+      name: 'addLife',
+      component: () => import('./views/manage/addLife.vue')
+    },
+    {
+      path: '/admin/addPhotos',
+      name: 'addPhotos',
+      component: () => import('./views/manage/addPhotos.vue')
     }
   ]
 })

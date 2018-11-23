@@ -1,29 +1,47 @@
 const mongoose = require('mongoose')
 //连接数据
-mongoose.connect('mongodb://47.93.45.73:27017')
+mongoose.connect('mongodb://47.93.45.73:27017/childBlog',{useNewUrlParser:true})
 
 const db = mongoose.connection
 db.once('error',()=>{
-  console.error('mongo connection error');
+  console.error('mongo connection error!!');
   return;
 })
-blur.once('open',()=>{
+db.once('open',()=>{
   console.log('mongo connection successed!')
 })
 
 //定义模式
-const logSchema = mongoose.Schema({
+const logSchema = new mongoose.Schema({
   article_title : String,
   article_time : Date,
-  rticle_click : Number,
+  article_click : Number,
   article_like : Number,
+  article_comment : Number,
   article_ip : String,
-  article_content : String
+  article_content : String,
+  article_thum_src : String,  //缩略图
+  article_abstract : String  //梗概
+})
+const eventSchema = new mongoose.Schema({
+  event_title : String,
+  event_time : Date,
+  event_click : Number,
+  event_like : Number,
+  event_ip : String,
+  event_content : String
+})
+const userSchema = new mongoose.Schema({
+  serName:String,
+  userPwd:String
 })
 
 //定义模型
 const Models = {
-  liftLog: mongoose.model('lifeLog',logSchema)
+  lifeLogs: mongoose.model('lifeLog',logSchema),
+  events: mongoose.model('event',eventSchema),
+  users: mongoose.model('user',userSchema)
 }
 
 module.exports = Models;
+

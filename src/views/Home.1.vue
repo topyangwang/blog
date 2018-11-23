@@ -28,6 +28,10 @@
                 <i>aaa</i>
                 <p>关于</p>
             </li></router-link>
+            <router-link to='/login'><li>
+                <i>aaa</i>
+                <p>登录</p>
+            </li></router-link>
           </ul>
         </div>
       </div>
