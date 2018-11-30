@@ -5,8 +5,7 @@ import './permission'  //权限管理
 import scrollReveal from 'scrollreveal'  //滚动动画
 import preview from 'vue-photo-preview'  //照片查看器
 import 'vue-photo-preview/dist/skin.css'
-
-
+Vue.use(preview)
 
 import Axios from 'axios';
 import {formatDate} from './common/filter'
@@ -16,12 +15,12 @@ editor();
 import 'font-awesome/css/font-awesome.min.css' //图标库
 import 'animate.css'
 
-// import VueHtml5Editor from 'vue-html5-editor'
-// Vue.use(VueHtml5Editor);
+import 'element-ui/lib/theme-chalk/index.css';
+import ElementUI from 'element-ui';
 
-Vue.prototype.scrollReveal = scrollReveal();
+Vue.prototype.scrollReveal = scrollReveal({reset: true});
 
-Vue.use(preview)
+Vue.use(ElementUI);
 
 Vue.prototype.$http = Axios
 

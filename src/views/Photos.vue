@@ -2,24 +2,30 @@
   <div class="photos">
     <topHead></topHead>
     <bgBox class="bgBox">
-      <ctitle>泰国</ctitle>
+      <ctitle>{{albumName}}</ctitle>
+      <ul class="adminNav" v-show="userId">
+        <li><router-link :to="{ path: '/admin/addPhotos', query: {album: albumName}}">传照片</router-link></li>
+        <li><router-link to="/admin/EditAlbum">相册管理</router-link></li>
+      </ul>
       <div class="photoBox">
-        <img class="photo" v-for="(img,index) in imgs"
-        :src="img.url"
-        :alt="img.title"
+        <img class="photo" v-for="(img,index) in photos"
+        :src="'/photos/'+albumName+'/'+img"
+        preview="1"
+        :alt="img"
         :key="index"
-        preview="0" 
         preview-text="描述文字">
         <img src="" alt="" class="photo">
         <img src="" alt="" class="photo">
         <img src="" alt="" class="photo">
       </div>
+      <p v-show="photos.length==0">暂无照片</p>
     </bgBox>
     <goTop v-show="top>100"></goTop>
   </div>
 </template>
 
 <script>
+// :src="'/photos/'+albumName+'/'+img"
 import topHead from '@/components/topHead'
 import bgBox from '@/components/bgBox'
 import ctitle from '@/components/ctitle'
@@ -30,43 +36,22 @@ export default {
    props:['top'],
   data(){
     return{
-      imgs:[
-        {
-          url: 'https://826327700.github.io/vue-photo-preview/demo/3.jpg',
-          title: 'pic1'
-        },
-        {
-          url: 'https://826327700.github.io/vue-photo-preview/demo/1.jpg',
-          title: 'pic2'
-        },
-        {
-          url: 'https://826327700.github.io/vue-photo-preview/demo/3.jpg',
-          title: 'pic1'
-        },
-        {
-          url: 'https://826327700.github.io/vue-photo-preview/demo/1.jpg',
-          title: 'pic2'
-        },
-        {
-          url: 'https://826327700.github.io/vue-photo-preview/demo/3.jpg',
-          title: 'pic1'
-        },
-        {
-          url: 'https://826327700.github.io/vue-photo-preview/demo/1.jpg',
-          title: 'pic2'
-        },
-        {
-          url: 'https://826327700.github.io/vue-photo-preview/demo/3.jpg',
-          title: 'pic1'
-        },
-        {
-          url: 'https://826327700.github.io/vue-photo-preview/demo/1.jpg',
-          title: 'pic2'
-        }
-      ]
+      photos:[],
+      photoUrl:'',
+      albumName:'',
+      userId:localStorage.getItem('userId')
     }
   },
   mounted(){
+    this.albumName = this.$route.query.name;
+    this.$http.get('/api/photos',{
+        params: {albumName: this.albumName}
+    }).then(response=>{
+      let res = response.data;
+      this.photoUrl = res.url;
+      this.photos = res.result;
+      this.$previewRefresh();
+    })
   }
 }
 </script>
@@ -77,6 +62,12 @@ export default {
   min-height 100vh
   background #075498 url('../assets/images/top.jpg') no-repeat center top;
   background-size cover
+  .adminNav
+    float right
+    li 
+      float  left 
+      margin 0 4px 
+      color #fff
   .photoBox 
     display flex
     align-items top 

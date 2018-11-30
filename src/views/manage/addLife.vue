@@ -1,14 +1,14 @@
 <template>
   <div class="addLife bgImg">
+    <manHead></manHead>
     <keep-alive>
     <bgBox class="bgBox">
-      <router-link to="/admin"><p>首页</p></router-link>
       <ctitle>写日志</ctitle>
       <p class="art_title">标题:</p>
       <input class="title_in" type="text" v-model="article_title">
       <p class="art_title">内容:</p>
       <vue-html5-editor :content="article_content" @change="updateContent"></vue-html5-editor>
-      <div class="art_title">日期: <input class="date_in" type="date"></div>
+      <div class="art_title">日期: <input class="date_in" type="date" v-model="put_date"></div>
       <div class="art_title artType">
         <input id="log" type="radio" name="artType" :checked="artType==1" @click="artType=1"><label for="log">日志</label>
         <input id="event" type="radio" name="artType" :checked="artType==2" @click="artType=2"><label for="event">大事迹</label>
@@ -16,7 +16,7 @@
       </div>
       
       <div class="publish">
-        <button class="blueBtn btn1" @click="publish()"  >发表</button>
+        <button class="blueBtn btn1" @click="publish()">发表</button>
         <button class="blueBtn btn2" @click="clear()">清空</button>
       </div>
     </bgBox>
@@ -25,19 +25,26 @@
 </template>
 
 <script>
+import manHead from '@/views/manage/components/head'
 import ctitle from '@/components/ctitle'
 import bgBox from '@/components/bgBox'
 
+const date = new Date();
+const today = `${date.getFullYear()}-${(date.getMonth()+1+'').padStart(2,'0')}-${(date.getDate()+'').padStart(2,'0')}`;
+const put_time = `${date.getHours()}:${date.getMinutes()}-${date.getSeconds()}`;
+
 export default {
   name: 'life',
-  components:{bgBox,ctitle},
+  components:{manHead,bgBox,ctitle},
   props:['top'],
   data(){
     return{
       logs:[],
       article_content:'',
       article_title:'',
-      artType:1
+      artType:1,
+      put_date: today,
+      put_time: put_time
     }
   },
   mounted(){
@@ -55,6 +62,7 @@ export default {
     clear(){
       this.article_title = '';
       this.article_content = '';
+      this.put_date= today;
     },
     publish(){
       if(this.article_content || this.article_title){
@@ -62,15 +70,16 @@ export default {
           this.$http.post('/admin/addLife',{
             article_title:this.article_title,
             article_content:this.article_content,
-            isEvent:this.isEvent
+            article_type:this.artType,
+            put_date:this.put_date,
+            put_time:this.put_time,
           }).then((response)=>{
             let res = response.data;
-            // if(res.status == 1){
-            //   localStorage.setItem('userId',res.result.userId)
-            //   this.$router.push('/admin')
-            // }else{
-            //   alert("用户名或密码错误！")
-            // }
+            if(res.status == 1){
+              this.$router.push('/life')
+            }else{
+              alert("发表失败！")
+            }
             console.log(res)
           }).catch((err)=>{
             console.log(err)

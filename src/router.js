@@ -58,6 +58,11 @@ export default new Router({
       path: '/admin/addPhotos',
       name: 'addPhotos',
       component: () => import('./views/manage/addPhotos.vue')
+    },
+    {
+      path: '/admin/editAlbum',
+      name: 'editAlbum',
+      component: () => import('./views/manage/editAlbum.vue')
     }
   ]
 })

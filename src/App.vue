@@ -11,9 +11,9 @@ export default {
     }
   },
   mounted(){
-    window.onscroll=()=>{
-        this.top = document.documentElement.scrollTop || document.body.scrollTop;
-    }
+    // window.addEventListener('scroll',()=>{
+    //   this.top = document.documentElement.scrollTop || document.body.scrollTop;
+    // })
   }
 }
 </script>

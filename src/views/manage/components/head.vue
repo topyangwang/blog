@@ -1,8 +1,5 @@
 <template>
-<div class="topHead">
-    <div class="logo">
-      <router-link to="/"><img src='@/assets/images/logo.png' alt=""></router-link> 
-    </div>
+<div class="manHead">
     <ul class="navgation">
         <li v-for = "(nav,index) in navs" :key="index">
           <router-link :to='nav.link'>{{nav.text}}</router-link>
@@ -18,11 +15,10 @@ export default {
   data(){
     return{
       navs:[
-        {'text':'首页','link':'/'},
-        {'text':'日志','link':'/life'},
-        {'text':'相册','link':'/album'},
-        {'text':'关于','link':'/about'},
-        // {'text':'留言册','link':'/messages'}
+        {'text':'博客首页','link':'/'},
+        {'text':'写日志','link':'/admin/addLife'},
+        {'text':'传照片','link':'/admin/addPhotos'},
+        {'text':'管理相册','link':'/admin/EditAlbum'},
       ]
     }
   }
@@ -31,17 +27,14 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang='stylus'>
-.topHead
-  .logo 
-    color #fff
-    font-size 20px
+.manHead
   .navgation  
       line-height 30px
       color #fff
       overflow hidden
       li 
-        padding 0 10px 
         font-weight 600
         float left
+        padding 0 10px 
         text-shadow 1px 1px 1px #aaa
 </style>

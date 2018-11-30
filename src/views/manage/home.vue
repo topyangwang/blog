@@ -12,18 +12,21 @@
             <router-link to="/admin/addLife"><li>
                 <p>写日志</p>
             </li></router-link>
-            <router-link to="/admin/EditLife"><li>
+            <!-- <router-link to="/admin/EditLife"><li>
                 <p>管理日志</p>
-            </li></router-link>
+            </li></router-link> -->
             <router-link to="/admin/addPhotos"><li>
                 <p>传照片</p>
             </li></router-link>
-            <router-link to="/admin/EditLife"><li>
-                <p>传视频</p>
+            <router-link to="/admin/EditAlbum"><li>
+                <p>管理相册</p>
             </li></router-link>
-            <router-link to="/admin/EditLife"><li>
+            <a><li @click="exitAcc()">
+                <p>退出账号</p>
+            </li></a>
+            <!-- <router-link to="/admin/EditLife"><li>
                 <p>管理留言</p>
-            </li></router-link>
+            </li></router-link> -->
           </ul>
         </div>
       </div>
@@ -31,7 +34,6 @@
     <div class="timeStream">
       <bgBox class="bgBox">
           <p class="floor">统计</p>
-          
       </bgBox>
     </div> 
     
@@ -56,15 +58,12 @@ export default {
   },
   mounted(){
     this.herderH = this.$refs.head.clientHeight;
-    
-    // this.$http.get('/api/events')
-    //   .then(response=>{
-    //     let res = response.data;
-    //     this.events = res.data;
-    //     console.log(this.events)
-    //   })
   },
   methods:{
+    exitAcc(){
+      localStorage.setItem('userId','')
+      this.$router.push({path: '/'});
+    }
   }
 }
 </script>

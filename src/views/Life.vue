@@ -4,18 +4,20 @@
     <keep-alive>
     <bgBox class="bgBox">
       <ctitle>日志</ctitle>
+      <ul class="adminNav" v-show="userId">
+        <li><router-link to="/admin/addLife">写日志</router-link></li>
+      </ul>
       <ul class="timeLine">
         <li v-for="(log,index) in logs" :key='index'>
           <router-link :to="{ path: '/detail', query: { id: log._id }}">
             <div class="time">
               <p class="p1">{{log.article_time | formatDate('hh:mm:ss')}}</p>
-              <p class="p2">{{log.article_time | formatDate('MM月dd')}}</p>
+              <p class="p2">{{log.article_time | formatDate('MM月dd日')}}</p>
             </div>
-            <div class="card reveal-right">
+            <div class="card reveal-right" data-scroll-reveal="wait 2.5s and then ease-in-out 100px"> 
               <p class="title">{{log.article_title}}</p>
               <div class="detail">
-                <!-- <div class="thumb" v-html="log.article_content"></div> -->
-                <!-- <div class="thumb"><img :src='log.article_thum_src' alt=""></div> -->
+                <div v-if="log.article_thum" class="thumb" v-html="log.article_thum.replace('<img','<img width=100%')"></div>
                 <div class="text">
                   <p v-html="log.article_abstract"></p>
                 </div>
@@ -41,24 +43,30 @@ export default {
   props:['top'],
   data(){
     return{
-      logs:[]
+      logs:[],
+      userId:localStorage.getItem('userId')
     }
   },
   mounted(){
-    this.scrollReveal.reveal('.reveal-right', {
-      duration: 1000,
-      origin: 'right',
-      reset: true,
-      mobile: true,
-      distance: '50px',
-    });
-
+    const that = this;
     this.$http.get('/api/log')
       .then(response=>{
         let res = response.data;
         console.log(res)
         this.logs = res.data;
       })
+
+  },
+  updated(){
+    if(this.logs.length!=0){
+      this.scrollReveal.reveal('.reveal-right', {
+        duration: 1000,
+        origin: 'right',
+        reset: true,
+        mobile: true,
+        distance: '50px',
+      })
+    }
   }
 }
 </script>
@@ -69,6 +77,12 @@ export default {
   min-height 100vh
   background #075498 url('../assets/images/top.jpg') no-repeat center top;
   background-size cover
+  .adminNav
+    float right
+    li 
+      float  left 
+      margin 0 4px 
+      color #fff
   .timeLine
     overflow hidden
     position relative
@@ -88,12 +102,12 @@ export default {
       position absolute
       top 0
       bottom 0 
-      left 56px
+      left 61px
     .time 
       font-size 12px
       color #075498 
       font-weight bolder
-      width 50px
+      width 55px
       position absolute
       text-align center
       padding-right 6px
@@ -109,7 +123,7 @@ export default {
         top 14px 
         right -6px
     .card 
-      margin 0 2% 0 78px
+      margin 0 2% 0 80px
       padding 1% 2%
       background-color #3594cb
       position relative
@@ -134,8 +148,6 @@ export default {
         display flex
         .thumb 
           flex 1
-          img 
-            width 100%
         .text 
           flex 2
           margin-left 10px

@@ -8,28 +8,24 @@
           <p class="name"> <span class="text">Yang hao wen</span> </p>
           <p class="role"> <span class="text">baby</span> </p>
           <ul class="nav">
-            <router-link to="/"><li>
-                <i>aaa</i>
-                <p>首页</p>
-            </li></router-link>
             <router-link to="/life"><li>
-                <i>aaa</i>
+                <i class="fa fa-file-text "></i>
                 <p>日志</p>
             </li></router-link>
-            <a href="#"><li>
-                <i>aaa</i>
-                <p>照片</p>
-            </li></a>
-            <a href="#"><li>
-                <i>aaa</i>
-                <p>视频</p>
-            </li></a>
+            <router-link to="/album"><li>
+                <i class="fa fa-picture-o"></i>
+                <p>相册</p>
+            </li></router-link>
             <router-link to='/about'><li>
-                <i>aaa</i>
+                <i class="fa fa-info-circle"></i>
                 <p>关于</p>
             </li></router-link>
-            <router-link to='/login'><li>
+            <!-- <router-link to="/"><li>
                 <i>aaa</i>
+                <p>留言</p>
+            </li></router-link> -->
+            <router-link to='/login'><li>
+                <i class="fa fa-user "></i>
                 <p>管理</p>
             </li></router-link>
           </ul>
@@ -41,17 +37,17 @@
           <p class="floor">成长大事迹</p>
           <ul class="timeLine">
             <li v-for="(event,index) in events" :key='index'>
-              <router-link to="/detail">
+              <router-link :to="{ path: '/detail', query: { id: event._id }}">
                 <div class="time">
-                  <p class="p1">{{event.event_time | formatDate('yyyy')}}</p>
-                  <p class="p2">{{event.event_time | formatDate('MM月dd日')}}</p>
+                  <p class="p1">{{event.article_time | formatDate('yyyy')}}</p>
+                  <p class="p2">{{event.article_time | formatDate('MM月dd')}}</p>
                 </div>
                 <div class="card reveal-right">
-                  <p class="title">{{event.event_title}}</p>
+                  <p class="title">{{event.article_title}}</p>
                   <div class="detail">
-                    <div class="thumb"><img src="../assets/images/p03.jpg" alt=""></div>
+                    <div v-if="event.article_thum" class="thumb" v-html="event.article_thum.replace('<img','<img width=100%')"></div>
                     <div class="text">
-                      <p>{{event.event_content}}</p>
+                      <p v-html="event.article_abstract"></p>
                     </div>
                   </div>
                 </div>
@@ -82,7 +78,16 @@ export default {
   },
   mounted(){
     this.herderH = this.$refs.head.clientHeight;
-    this.scrollReveal.reveal('.reveal-right', {
+   
+    this.$http.get('/api/events')
+      .then(response=>{
+        let res = response.data;
+        this.events = res.data;
+      })
+  },
+  updated(){
+
+    this.events.length!=0 && this.scrollReveal.reveal('.reveal-right', {
       duration: 1000,
       origin: 'right',
       reset: true,
@@ -90,12 +95,6 @@ export default {
       distance: '50px',
     });
     
-    this.$http.get('/api/events')
-      .then(response=>{
-        let res = response.data;
-        this.events = res.data;
-        console.log(this.events)
-      })
   },
   methods:{
   }
@@ -162,9 +161,12 @@ export default {
             color #ffffff
         .nav 
           padding 0
+          i 
+            font-size 26px
           li 
             display inline-block
-            margin 0 4px
+            margin 20px 8px 0
+            font-size 12px
   .timeStream
     padding-bottom 20px
     padding-top 1px
@@ -240,8 +242,6 @@ export default {
           display flex
           .thumb 
             flex 1
-            img 
-              width 100%
           .text 
             flex 2
             margin-left 10px

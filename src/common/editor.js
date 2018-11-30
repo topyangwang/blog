@@ -28,6 +28,7 @@ export default function () {
     image: {
       // 文件最大体积，单位字节  
       sizeLimit: 512 * 1024 * 10,
+      
       // 上传参数,默认把图片转为base64而不上传
       // upload config,default null and convert image to base64
       upload: {

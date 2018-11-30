@@ -3,19 +3,22 @@
     <topHead></topHead>
     <bgBox class="bgBox">
       <ctitle>相册</ctitle>
+      <ul class="adminNav" v-show="userId">
+        <li><router-link :to="{ path: '/admin/addPhotos'}">传照片</router-link></li>
+        <li><router-link to="/admin/EditAlbum">相册管理</router-link></li>
+      </ul>
       <ul class="albumItems">
-        <li v-for="(item,index) in [1,1,1,1,1,1,1]" :key='index' class="albumItem" :class="{'reveal-left':index%3==0,'reveal-bottom':index%3==1,'reveal-right':index%3==2}">
-            <router-link to="/photos">
+        <li v-for="(item,index) in albums" :key='index' class="albumItem" :class="{'reveal-left':index%3==0,'reveal-bottom':index%3==1,'reveal-right':index%3==2}">
+            <router-link :to="{ path: '/photos', query: { name: item }}">
               <img class="thumb" src="@/assets/images/top.jpg" alt="">
               <div class="describe">
-                <p class="title">泰国</p>
+                <p class="title">{{item}}</p>
                 <!-- <p class="text">sdfasfd sfadsf jljadsf ljsldkfj slkfjdf ioejfdkj faskieowr fja kjsfier fjkasdfl</p> -->
               </div>
             </router-link>
         </li>
       </ul>
     </bgBox>
-
   </div>
 </template>
 
@@ -28,30 +31,42 @@ export default {
   components:{topHead,bgBox,ctitle},
   data(){
     return{
+      albums:[],
+      userId:localStorage.getItem('userId')
     }
   },
   mounted(){
-    this.scrollReveal.reveal('.reveal-bottom', {
-      duration: 1000,
-      origin: 'bottom',
-      reset: true,
-      mobile: true,
-      distance: '50px',
-    });
-    this.scrollReveal.reveal('.reveal-left', {
-      duration: 1000,
-      origin: 'left',
-      reset: true,
-      mobile: true,
-      distance: '50px',
-    });
-    this.scrollReveal.reveal('.reveal-right', {
-      duration: 1000,
-      origin: 'right',
-      reset: true,
-      mobile: true,
-      distance: '50px',
-    });
+    this.$http.get('/api/albums')
+      .then(response=>{
+        let res = response.data;
+        console.log(res)
+        this.albums = res.result;
+      })
+  },
+  updated(){
+    if(this.albums.length!=0){
+      this.scrollReveal.reveal('.reveal-bottom', {
+        duration: 1000,
+        origin: 'bottom',
+        reset: true,
+        mobile: true,
+        distance: '50px',
+      });
+      this.scrollReveal.reveal('.reveal-left', {
+        duration: 1000,
+        origin: 'left',
+        reset: true,
+        mobile: true,
+        distance: '50px',
+      });
+      this.scrollReveal.reveal('.reveal-right', {
+        duration: 1000,
+        origin: 'right',
+        reset: true,
+        mobile: true,
+        distance: '50px',
+      });
+    }
   }
 }
 </script>
@@ -63,20 +78,12 @@ export default {
   background #075498 url('../assets/images/top.jpg') no-repeat center top;
   background-size cover
   .bgBox
-    .ctitle
-      line-height 30px
-      display inline-block
-      background-color #2a7497
-      color #ffffff
-      font-size 18px 
-      text-align center
-      font-weight 800
-      border-top-right-radius 15px
-      border-bottom-right-radius 15px
-      border-left 4px solid #dae1e4
-      box-shadow 1px 1px 1px #21566f
-      margin-bottom 10px
-      padding 0 20px
+    .adminNav
+      float right
+      li 
+        float  left 
+        margin 0 4px 
+        color #fff
     .albumItems
       overflow hidden
       padding-left 1%

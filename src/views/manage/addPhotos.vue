@@ -1,11 +1,39 @@
 <template>
   <div class="addPhotos bgImg">
+    <manHead></manHead>
     <keep-alive>
     <bgBox class="bgBox">
-      <router-link to="/admin"><p>首页</p></router-link>
       <ctitle>上传照片</ctitle>
-      <!-- <uploader url="http://..." ></uploader> -->
-      
+      <div class="selectAlbum">
+        <span>选择相册：</span>
+        <el-select v-model="selectedAlbum" placeholder="请选择相册">
+          <el-option
+            v-for="item in albums"
+            :key="item"
+            :label="item"
+            :value="item">
+          </el-option>
+        </el-select>
+      </div>
+
+      <el-upload
+        action="/admin/addPhotos"
+        ref="upload"
+        list-type="picture-card"
+        :on-preview="handlePictureCardPreview"
+        :on-remove="handleRemove"
+        :on-change="handleChange"
+        :auto-upload="false" 
+        :before-upload="beforeUpload"
+        :on-success="handleSuccess"
+        multiple>
+        <i class="el-icon-plus"></i>
+      </el-upload>
+      <!-- 放大图片 -->
+      <el-dialog :visible.sync="dialogVisible">  
+        <img width="100%" :src="dialogImageUrl" alt="">
+      </el-dialog>
+      <p v-show="rejectList.length>0">{{rejectList.join('; ')}}文件大于5兆</p>
       <div class="publish">
         <button class="blueBtn btn1" @click="upload()">上传</button>
         <!-- <button class="blueBtn btn2" @click="clear()">清空</button> -->
@@ -16,71 +44,74 @@
 </template>
 
 <script>
+import manHead from '@/views/manage/components/head'
 import ctitle from '@/components/ctitle'
 import bgBox from '@/components/bgBox'
 
 export default {
   name: 'life',
-  components:{bgBox,ctitle},
+  components:{manHead,bgBox,ctitle},
   props:['top'],
   data(){
     return{
+      dialogVisible:false,
+      dialogImageUrl: '',
+      fileList:'',
+      rejectList:[],
+      albums:[],
+      selectedAlbum:''
     }
   },
   mounted(){
-    // this.$http.get('/api/log')
-    //   .then(response=>{
-    //     let res = response.data;
-    //     console.log(res)
-    //     this.logs = res.data;
-    //   })
+    this.$http.get('/api/albums')
+    .then(response=>{
+      let res = response.data;
+      this.albums = res.result;
+      this.selectedAlbum = this.$route.query.album || this.albums[0];
+    })
   },
   methods:{
-    upload(){
-      if(this.article_content || this.article_title){
-        if(confirm("是否确上传照片？")){
-          this.$http.post('/admin/addLife',{
-            article_title:this.article_title,
-            article_content:this.article_content,
-            isEvent:this.isEvent
-          }).then((response)=>{
-            let res = response.data;
-            // if(res.status == 1){
-            //   localStorage.setItem('userId',res.result.userId)
-            //   this.$router.push('/admin')
-            // }else{
-            //   alert("用户名或密码错误！")
-            // }
-            console.log(res)
-          }).catch((err)=>{
-            console.log(err)
-          })
-        }
-      }else{
-        alert("请编写内容！")
+    handleRemove(file, fileList) {
+      // console.log(fileList);
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
+    handleChange (file, fileList) {
+      const isLt2M = (file.size / 1024 / 1024 < 5);
+      if(!isLt2M){
+        this.rejectList.push(file.name)
+        fileList.pop()
       }
-      
-    }
+      this.fileList = fileList;
+      return isLt2M
+    },
+    handleSuccess(response, file, fileList){
+      fileList.length = 0;
+    },
+    beforeUpload (file) {
+       let fd = new FormData()
+       fd.append('file', file)  //必须有否则submit提交的文件问空
+       fd.append('album', this.selectedAlbum)
+          
+      this.$http.post('/admin/addPhotos',fd)
+        .then(()=>{ }) 
+      return false // false就是不自动上传，我后来试了发现都一样，都不会自动上传
+    },
+    upload(){
+      if(this.fileList.length>0){
+        this.$refs.upload.submit();
+      }
+    },
   }
 }
 </script>
 
 <style lang='stylus' scoped>
 .addPhotos
-  .art_title 
-    font-size 18px
-    font-weight 600
-    margin-top 10px
-  .title_in
-    line-height 30px
-    border none
-    padding 0 10px
-    width 100%
-    box-sizing border-box
-    border-radius 5px
-  .artType
-    label 
-      margin-right 10px
+  .selectAlbum
+    margin 10px 0
   .publish
     text-align center
     margin-top 20px
@@ -97,4 +128,17 @@ export default {
       background-color #fff
       border-radius 4px
       color #333
+  .el-dialog
+    width 90%
+  >>>.el-upload--picture-card
+    width 100px
+    height 100px
+    line-height 100px
+    margin-left 1%
+  >>>.el-upload-list--picture-card .el-upload-list__item
+    width 31%
+    height auto
+    margin 0 1% 1%
+  >>>.el-upload-list--picture-card .el-upload-list__item-thumbnail
+    vertical-align top
 </style>

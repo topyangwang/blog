@@ -10,14 +10,15 @@ app.use(bodyParser.urlencoded({extended:false}))
 
 app.use(api)
 
-app.use(express.static(path.resolve(__dirname+'../dist')))
+app.use(express.static(path.join(__dirname,'../dist')))
+app.use('/photos',express.static(path.join(__dirname, '../photos')));
 // 因为是单页应用 所有请求都走/dist/index.html
-// app.get('*', function (req, res) {
-//   let html = fs.readFileSync(path.resolve('./' + '../dist/index.html'), 'utf-8')
-//   res.send(html)
-// })
+app.get('*', function (req, res) {
+  let html = fs.readFileSync(path.join(__dirname, '../dist/index.html'), 'utf-8')
+  res.send(html)
+})
 
-var server = app.listen(8088,()=>{
+var server = app.listen(4001,()=>{
   let port = server.address().port;
   console.log('app listening at http://%s:%s','localhost',port);
 })
