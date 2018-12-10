@@ -4,7 +4,7 @@
     <bgBox class="bgBox">
       <ctitle>{{article.article_title}}</ctitle>
       <p class="info">
-        <span>2018-11-9</span>
+        <span>{{article.article_time | formatDate('yyyy-MM-dd hh:mm:ss')}}</span>
         <span>{{article.article_comment}}条评论</span>
         <span>{{article.article_click}}次阅读</span>
         <span>{{article.article_like}}人点赞</span>

@@ -9,7 +9,7 @@ const router = express.Router();
 let {lifeLogs,users} = models;
 
 router.get('/api/log',(req,res) => {
-  lifeLogs.find({article_type:{$ne:2}},(err,logs)=>{
+  lifeLogs.find({article_type:{$ne:2}}).sort({'article_time':-1}).exec((err,logs)=>{
     if(err){
       res.send(err);
     } else {
@@ -21,6 +21,8 @@ router.get('/api/log',(req,res) => {
     }
   })
 })
+    
+   
 router.get('/api/detail',(req,res) => {
   let id = req.query.id;
   lifeLogs.findById(id,(err,article)=>{
@@ -36,7 +38,7 @@ router.get('/api/detail',(req,res) => {
   })
 })
 router.get('/api/events',(req,res) => {
-  lifeLogs.find({article_type:{$ne:1}},(err,events)=>{
+  lifeLogs.find({article_type:{$ne:1}}).sort({'article_time':-1}).exec((err,events)=>{
     if(err){
       res.send(err);
     } else {
@@ -139,6 +141,8 @@ router.post('/admin/addLife',(req,res) => {
   let article_type = req.body.article_type;
   let put_date = req.body.put_date;
   let put_time = req.body.put_time;
+  console.log(put_date)
+  console.log(put_time)
   let article_thum = article_content.match(imgReg)?article_content.match(imgReg)[0]:'';
   // let article_thum = article_content.match(imgReg)[0].match(srcReg);
   // let article_thum_src = String(article_thum).substring(5);
@@ -148,7 +152,7 @@ router.post('/admin/addLife',(req,res) => {
     article_title: article_title,
     article_content: article_content,
     article_type: article_type,
-    article_time :  new Date,
+    article_time : new Date(`${put_date} ${put_time}`),
     article_click : 0,
     article_like : 0,
     article_comment : 0,

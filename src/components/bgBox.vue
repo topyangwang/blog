@@ -28,4 +28,5 @@ export default {
     .container
       background-color rgba(255,255,255,.3)
       padding 20px 10px
+      min-height 200px
 </style>

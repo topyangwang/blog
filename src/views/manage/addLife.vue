@@ -31,7 +31,7 @@ import bgBox from '@/components/bgBox'
 
 const date = new Date();
 const today = `${date.getFullYear()}-${(date.getMonth()+1+'').padStart(2,'0')}-${(date.getDate()+'').padStart(2,'0')}`;
-const put_time = `${date.getHours()}:${date.getMinutes()}-${date.getSeconds()}`;
+const put_time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
 
 export default {
   name: 'life',
