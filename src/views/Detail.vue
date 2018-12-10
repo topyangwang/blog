@@ -46,6 +46,8 @@ export default {
       let res = response.data;
       console.log(res)
       this.article = res.data;
+      this.article.article_content=this.article.article_content.replace('<img ','<img style="max-width:100%"')
+      console.log(this.article.article_content)
     })
   },
   methods:{

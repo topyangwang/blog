@@ -18,5 +18,7 @@ module.exports = {
         changOrigin: true 
       }
     }
-  }
+  },
+
+  lintOnSave: undefined
 };

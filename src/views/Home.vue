@@ -4,7 +4,7 @@
     <header class="head" ref = "head">
       <div class="shade">
         <div class="content">
-          <img class="avatar" src="../assets/images/cover_bg_3.jpg" alt="avatar">
+          <img class="avatar" src="../assets/images/user.jpg" alt="avatar">
           <p class="name"> <span class="text">Yang hao wen</span> </p>
           <p class="role"> <span class="text">baby</span> </p>
           <ul class="nav">

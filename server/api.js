@@ -235,11 +235,12 @@ router.post('/admin/addPhotos',(req,res) => {
     var form = new formidable.IncomingForm();
     form.uploadDir = path.join(__dirname, 'tmp'); //文件保存的临时目录为当前项目下的tmp文件夹    
     form.keepExtensions = true; //使用文件的原扩展名
+    let targetDir = '../photos/'+'日常';
     form.parse(req, (err, fields, file) => {
         if(err){throw err;} 
         console.log(file)
         //文件移动的目录文件夹，不存在时创建目标文件夹        
-        let targetDir = '../photos/'+fields.album;
+        // let targetDir = '../photos/'+fields.album;
         if (!fs.existsSync(targetDir)) {fs.mkdir(targetDir);}
 
         let filePath = file.file.path;
